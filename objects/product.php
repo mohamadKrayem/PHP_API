@@ -9,7 +9,5 @@
     public function getArgs();
     // public function create();
     public function read();
+    public function create();
   }
-
-
- ?>

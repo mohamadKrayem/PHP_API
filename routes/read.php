@@ -1,43 +1,52 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: *");
 // include database and object files
 include_once '../config/database.php';
 include_once '../objects/product.php';
+include_once '../objects/Furniture.php';
+include_once '../objects/DISC.php';
 include_once '../objects/Book.php';
 
-$type = isset($_GET['type']) ? $_GET['id'] : "Book";
+$types = isset($_GET['type']) ? $_GET['type'] : die();
+$products_arr = array();
 
 $database = new Database();
 $db = $database->getConnection();
-$productClass = ucfirst($type);
-$Book = new $productClass($db));
-$stmt = $Book->read();
-$num = $stmt->rowCount();
+
+foreach ($types as &$type) {
+  $productClass = ucfirst($type);
+  $Product = new $productClass($db);
+  $stmt = $Product->read();
+  $num = $stmt->rowCount();
 
 
-if($num>0){
+  if ($num > 0) {
 
-  $products_arr = array();
 
-  while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
-    extract($row);
-    $lastArg = $Book->getArgs();
-    $product_item = array(
-      $lastArgs[0] => $type,
-      $lastArgs[1] => $price,
-      $lastArgs[2] => $name,
-      $lastArgs[3] => $sku,
-      $lastArgs[4] => echo($lastArgs[4])
-    );
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    array_push($products_arr, $product_item);
+      extract($row);
+      $args = $Product->getArgs();
+      $product_item = array(
+        $args[0] => ucfirst($type),
+        $args[1] => $price,
+        $args[2] => ucfirst($name),
+        $args[3] => ucfirst($sku),
+        "lastArg" => ucfirst($args['lastArg']),
+        "value" => $lastArg,
+        "unit" => $args['unit']
+      );
+
+      array_push($products_arr, $product_item);
+    }
   }
-
-  http_response_code(200);
-
-  echo json_encode($products_arr);
-
 }
- ?>
+
+http_response_code(200);
+
+echo json_encode($products_arr);

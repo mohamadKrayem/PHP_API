@@ -3,8 +3,8 @@ class Database {
 
   //database credentials;
   private $host = "localhost";
-  private $db_name = "";
-  private $username = "";
+  private $db_name = "products";
+  private $username = "root";
   private $password = "";
   private $con;
 
@@ -12,7 +12,8 @@ class Database {
     $this->conn = null;
 
     try{
-      $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+      $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, 
+      $this->username, $this->password);
       $this->conn->exec("set names utf8");
     }catch(PDOException $exception){
       echo "Connection faild: " . $exception->getMessage();
@@ -23,4 +24,3 @@ class Database {
 
 
 }
- ?>
